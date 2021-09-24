@@ -55,6 +55,11 @@ h2
   text-shadow: 2px 2px 2px #3b0000;
 }
 
+.underline
+{
+  text-decoration: underline;
+}
+
 #brownie-image
 {
   border: 5px solid #400105;
