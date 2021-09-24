@@ -20,13 +20,14 @@ table, th, td
   /*Create a border around the data*/
   border: 1px solid black;
   border-collapse: collapse;
-  /*Add some space on either side of a cell*/
+  /*Add some space on either side of the text in a cell*/
   padding-left: 10px;
   padding-right: 10px;
 }
 
 hr
 {
+  /*Set color and size for horizonatal rule*/
   height: 2px;
   width: 850px;
   background: #400105;
@@ -52,6 +53,7 @@ h2
 
 .shadow
 {
+  /*Drop shadow to the bottom right*/
   text-shadow: 2px 2px 2px #3b0000;
 }
 
@@ -68,4 +70,5 @@ h2
 #enjoy
 {
   font-style: italic;
+  font-size: 30px;
 }
