@@ -7,8 +7,9 @@ body
   /*Center text and other items*/
   text-align: center;
   margin: auto;
-  font-family: "georgia";
+  font-family: Georgia;
   line-height: 30px;
+  color: #400105
 }
 
 table, th, td
@@ -28,16 +29,19 @@ hr
 {
   height: 2px;
   width: 850px;
-  background: black;
+  background: #400105;
   margin-top: 30px;
 }
 
 h1
 {
-  color: #00022e;
-  font-family: fantasy;
-  letter-spacing: 2px;
+  font-family: Verdana;
   font-size: 50px;
+}
+
+h2
+{
+  font-family: Verdana;
 }
 
 .center-list
@@ -46,8 +50,17 @@ h1
   list-style-position: inside;
 }
 
+.shadow
+{
+  text-shadow: 2px 2px 2px #3b0000;
+}
+
 #brownie-image
 {
-  border-color: #00022e;
-  border-width: 20px;
+  border: 5px solid #400105;
+}
+
+#enjoy
+{
+  font-style: italic;
 }
