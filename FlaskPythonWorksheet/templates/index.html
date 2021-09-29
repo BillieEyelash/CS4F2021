@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <title>Home page</title>
+{% endblock %}
+
+{% block body %}
+
+  <h1>Home Page</h1>
+  <a href="factorial">Link to factorial page</a>
+
+  <p>myVar = {{myVar}}</p>
+  {% for i in myList %}
+    <p>Letter: {{i}}</p>
+  {% endfor %}
+
+  {% for iteration in range(0, 10) %}
+    {% if iteration < 5 %}
+      <p>Small number: {{iteration}}</p>
+    {% else %}
+      <p>Large number: {{iteration}}</p>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}
