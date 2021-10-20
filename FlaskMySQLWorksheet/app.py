@@ -16,4 +16,4 @@ def index():
     cursor.execute(query)
     mysql.connection.commit()
     data = cursor.fetchall()
-   return render_template('index.html', rows=data)
+    return render_template('index.html', rows=data)
