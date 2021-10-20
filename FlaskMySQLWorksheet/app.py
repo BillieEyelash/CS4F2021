@@ -11,9 +11,15 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    # Set up MySQL object which can be used for multiple queries
     cursor = mysql.connection.cursor()
+    # Define query string
     query = 'SELECT * FROM riatalwar_test'
+    # Execute (actually run) the predefined query
     cursor.execute(query)
+    # Commit query (necessary when executing multiple queries)
     mysql.connection.commit()
+    # Fetches all rows returned by the query (only necessary when getting information)
+    # The data is returned as a multidimensional associative array
     data = cursor.fetchall()
     return render_template('index.html', rows=data)
