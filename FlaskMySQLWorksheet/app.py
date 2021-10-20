@@ -11,4 +11,9 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
-   return render_template('index.html')
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM riatalwar_test'
+    cursor.execute(query)
+    mysql.connection.commit()
+    data = cursor.fetchall()
+   return render_template('index.html', rows=data)
