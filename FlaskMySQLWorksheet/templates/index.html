@@ -5,5 +5,22 @@
 {% endblock %}
 
 {% block body %}
-  {{rows}}
+  <!--<table>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+    </tr>
+    {% for row in rows %}
+      <tr>
+        <td>{{row.name}}</td>
+        <td>{{row.age}}</td>
+      </tr>
+    {% endfor %}
+  </table>-->
+  <p>Search for a name in the database!</p>
+  <form method="POST" action="results">
+    Name:
+    <input type="text" name="searchname"><br/>
+    <input type="submit" value="Submit">
+  </form>
 {% endblock %}
