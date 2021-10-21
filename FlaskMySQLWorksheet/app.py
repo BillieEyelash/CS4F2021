@@ -15,18 +15,29 @@ def index():
 
 @app.route('/results', methods=['POST'])
 def results():
-    name = request.form.get("searchname")
+    # Get form input
+    searchName = request.form.get("searchname")
+    insertName = request.form.get("name")
+    insertAge = int(request.form.get("age"))
     # Set up MySQL object which can be used for multiple queries
     cursor = mysql.connection.cursor()
+
     # Define query string
-    query = "SELECT * FROM riatalwar_test WHERE name=%s;"
+    query1 = "SELECT * FROM riatalwar_test WHERE name=%s;"
+    query2 = "INSERT INTO `riatalwar_test`(`name`, `age`) VALUES (%s, %s);"
     # List of variables to insert into query
-    queryVars = (name,)
+    query1Vars = (searchName,)
+    query2Vars = (insertName, insertAge,)
+
     # Execute (actually run) the predefined query
-    cursor.execute(query, queryVars)
+    cursor.execute(query1, query1Vars)
     # Commit query (necessary when executing multiple queries)
     mysql.connection.commit()
     # Fetches all rows returned by the query (only necessary when getting information)
     # The data is returned as a multidimensional associative array
     data = cursor.fetchall()
+    # Execute second query -- no need to fetch for INSERT
+    cursor.execute(query2, query2Vars)
+    mysql.connection.commit()
+
     return render_template("results.html", numPeople=len(data))
