@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <title>Output</title>
+  </head>
+  <body>
+    {% if emailAddress|length >= 5 %}
+      <p>{{emailAddress}}</p>
+    {% elif emailAddress|length == 0 %}
+      <p>Blank input!</p>
+    {% else %}
+      <p>Not an email!</p>
+    {% endif %}
+  </body>
+</html>
