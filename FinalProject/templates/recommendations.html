@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}
+  <title>Recommendations</title>
+{% endblock %}
+
+{% block body %}
+  {% for g, gRecs in recs %}
+    <p>g</p>
+    <ul>
+      {% for r in gRecs %}
+        <li>r</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endblock %}
