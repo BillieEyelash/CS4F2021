@@ -48,3 +48,20 @@ body
   font-size: 10px;
   color: #00635d;
 }
+
+
+.pagelink
+{
+  color: #000000;
+  text-decoration: none;
+  padding-right: 20px;
+  padding-left: 20px;
+  line-height: 50px;
+}
+
+#header
+{
+  width: 100%;
+  background: #d9d9d9;
+  height: 50px
+}
