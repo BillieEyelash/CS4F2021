@@ -17,6 +17,14 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/login')
+def login():
+    ''' Description: Launch the login page
+        Parameters: None
+        Return: Login page '''
+    return render_template('login.html')
+
+
 @app.route('/search', methods=['GET'])
 def search():
     ''' Description: Launch the results page and retrieve input from form
@@ -43,7 +51,7 @@ def recommendations():
         q = "SELECT author, title FROM `riatalwar_recommendatons` WHERE genre_id=%s"
         qVars = (id,)
         recsDict = execute_query(cur, q, qVars)
-        
+
         # Make an alphabetical list of recommendations
         recsList = [(rec['title'] + " by " + rec['author']) for rec in recsDict]
         recsList.sort()
@@ -51,6 +59,22 @@ def recommendations():
         r[pair['genre']] = recsList
 
     return render_template('recommendations.html', recs=r)
+
+
+@app.route('/profile')
+def profile():
+    ''' Description: Launch the profile page
+        Parameters: None
+        Return: Profile page '''
+    return render_template('profile.html')
+
+
+@app.route('/yourbooks')
+def yourbooks():
+    ''' Description: Launch the yourbooks page to display user's books
+        Parameters: None
+        Return: Yourbooks page '''
+    return render_template('yourbooks.html')
 
 
 def execute_query(cursor, query, queryVars=()):
