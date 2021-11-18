@@ -49,7 +49,6 @@ body
   color: #00635d;
 }
 
-
 .pagelink
 {
   color: #000000;
@@ -62,6 +61,17 @@ body
 #header
 {
   width: 100%;
-  background: #d9d9d9;
+  background: #e6ebed;
   height: 50px
+}
+
+#profilepic
+{
+  width: 40px;
+  height: auto;
+  border-radius: 100%;
+  border: 1px solid #919191;
+  margin-top: 4px;
+  margin-right: 20px;
+  float: right;
 }
