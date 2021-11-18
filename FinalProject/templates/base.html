@@ -8,9 +8,14 @@
   </head>
   <body>
     <div id="header">
+      <a class="pagelink" href="/">Home</a>
       <a class="pagelink" href="recommendations">Recommendations</a>
-      <a id="profilepic" class="pagelink" href="yourbooks">Your Books</a>
-      <!--<a class="pagelink" href="profile"><img src="static/profile.png" alt="Profile" /></a>-->
+      <a class="pagelink" href="yourbooks">Your Books</a>
+      <form class="pagelink" action="search" method="post">
+        <input type="text" name="query">
+        <input type="submit" name="search" value="search">
+      </form>
+      <a href="profile"><img id="profilepic" src="static/profile.png" alt="Profile" /></a>
     </div>
     {% block body %}
     {% endblock %}
