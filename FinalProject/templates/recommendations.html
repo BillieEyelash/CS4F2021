@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-  {% for g, gRecs in recs %}
-    <p>g</p>
+  {% for g, gRecs in recs.items() %}
+    <p>{{g}}</p>
     <ul>
       {% for r in gRecs %}
-        <li>r</li>
+        <li>{{r}}</li>
       {% endfor %}
     </ul>
   {% endfor %}
