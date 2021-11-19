@@ -5,11 +5,13 @@
 
 {% block body %}
   {% for g, gRecs in recs.items() %}
-    <p>{{g}}</p>
-    <ul>
-      {% for r in gRecs %}
-        <li>{{r}}</li>
-      {% endfor %}
-    </ul>
+    <div class="col-sm-4 inline">
+      <p>{{g}}</p>
+      <ul>
+        {% for r in gRecs %}
+          <li>{{r}}</li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endfor %}
 {% endblock %}
