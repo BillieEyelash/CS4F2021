@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'mysql.2122.lakeside-cs.org'
@@ -7,22 +8,65 @@ app.config['MYSQL_USER'] = 'student2122'
 app.config['MYSQL_PASSWORD'] = 'm545CS42122'
 app.config['MYSQL_DB'] = '2122project'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['SECRET_KEY'] = 'kjstghweujkdssioe'
 mysql = MySQL(app)
 
 @app.route('/')
 def index():
-    ''' Description: Launch the home page which contains the form
+    ''' Description: Launch the home page
         Parameters: None
         Return: Home page '''
-    return render_template('index.html')
+    return render_template('index.html', username=session.get('riatalwar_username'))
 
 
-@app.route('/login')
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    ''' Description: Launch the login page
+        Parameters: None
+        Return: Signup page '''
+    if request.method == 'GET':
+        return render_template('signup.html')
+    username = request.form.get('username')
+    if len(username) > 50:
+        return redirect(url_for('signup', error=True))
+    password = request.form.get('password')
+    securedPass = generate_password_hash(password)
+    cur = mysql.connection.cursor()
+    q = 'INSERT INTO riatalwar_users(username, password) VALUES (%s, %s)'
+    qVars = (username, securedPass)
+    execute_query(cur, q, qVars)
+    return redirect(url_for('login'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     ''' Description: Launch the login page
         Parameters: None
         Return: Login page '''
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    cur = mysql.connection.cursor()
+    q = 'SELECT password FROM riatalwar_users WHERE username=%s'
+    qVars = (username,)
+    results = execute_query(cur, q, qVars)
+    if len(results) == 0: # Invalid username
+        return redirect(url_for('login', error=True))
+    elif check_password_hash(results[0]['password'], password): # Correct username and password
+        session['riatalwar_username'] = username
+        return redirect(url_for('index'))
+    else: # Incorrect password
+        return redirect(url_for('login', error=True))
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    ''' Description: Logout user and redirect to home page
+        Parameters: None
+        Return: Home page '''
+    session.pop('riatalwar_username', None)
+    return redirect(url_for('index'))
 
 
 @app.route('/search', methods=['GET'])
@@ -66,6 +110,8 @@ def profile():
     ''' Description: Launch the profile page
         Parameters: None
         Return: Profile page '''
+    if session.get('riatalwar_username') == None:
+        return redirect(url_for('signup'))
     return render_template('profile.html')
 
 
