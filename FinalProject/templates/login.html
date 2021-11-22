@@ -5,12 +5,14 @@
 
 {% block body %}
   {% if error %}
-    <p class="alert alert-danger">Username or password is incorrect.</p>
+    <div class="alert alert-danger" role="alert">
+      Username or password is incorrect.
+    </div>
   {% endif %}
   <form method="POST" action="login">
-    Username: <input type="text" name="username">
+    Username: <input type="text" name="username" required>
     <br/>
-    Password:  <input type="password" name="password">
+    Password:  <input type="password" name="password" required>
     <br/>
     <input type="submit" value="login">
   </form>
