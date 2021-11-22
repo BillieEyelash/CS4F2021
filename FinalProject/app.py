@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -25,13 +26,25 @@ def signup():
         Parameters: None
         Return: Signup page '''
     if request.method == 'GET':
-        return render_template('signup.html')
+        return render_template('signup.html', error=request.args.get('error'))
     username = request.form.get('username')
-    if len(username) > 50:
-        return redirect(url_for('signup', error=True))
     password = request.form.get('password')
-    securedPass = generate_password_hash(password)
     cur = mysql.connection.cursor()
+
+    # Check if username already in database --> error
+    q = "SELECT * FROM riatalwar_users WHERE username = %s"
+    qVars = (username,)
+    if len(execute_query(cur, q, qVars)) > 0:
+        return redirect(url_for('signup', error=True))
+    # Check if username is too long/short --> error
+    elif len(username) > 50 or len(username) == 0:
+        return redirect(url_for('signup', error=True))
+    # Check if password is too short --> error
+    elif len(password) == 0:
+        return redirect(url_for('signup', error=True))
+
+    # Insert username/password into database --> login
+    securedPass = generate_password_hash(password)
     q = 'INSERT INTO riatalwar_users(username, password) VALUES (%s, %s)'
     qVars = (username, securedPass)
     execute_query(cur, q, qVars)
@@ -44,19 +57,24 @@ def login():
         Parameters: None
         Return: Login page '''
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', error=request.args.get('error'))
     username = request.form.get('username')
     password = request.form.get('password')
+    # Search database for username/password
     cur = mysql.connection.cursor()
-    q = 'SELECT password FROM riatalwar_users WHERE username=%s'
+    q = 'SELECT password FROM riatalwar_users WHERE username = %s'
     qVars = (username,)
     results = execute_query(cur, q, qVars)
-    if len(results) == 0: # Invalid username
+
+    # Invalid username --> error
+    if len(results) == 0:
         return redirect(url_for('login', error=True))
-    elif check_password_hash(results[0]['password'], password): # Correct username and password
+    # Correct username and password --> home
+    elif check_password_hash(results[0]['password'], password):
         session['riatalwar_username'] = username
         return redirect(url_for('index'))
-    else: # Incorrect password
+    # Invalid password --> error
+    else:
         return redirect(url_for('login', error=True))
 
 
@@ -69,7 +87,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     ''' Description: Launch the results page and retrieve input from form
         Parameters: None
