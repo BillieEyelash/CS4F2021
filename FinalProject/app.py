@@ -93,7 +93,33 @@ def search():
         Parameters: None
         Return: Search results page '''
     # get search results from API
-    return render_template('search.html')
+    q = request.form.get('query')
+    req = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + q + "&printType=books&orderBy=relevance"
+    response = requests.get(req)
+    jsonResp = response.json()
+    books = []
+    try:
+        items = jsonResp['items']
+        for item in items:
+            volInfo = item['volumeInfo']
+            book = {}
+            book['title'] = volInfo['title']
+            try:
+                book['author'] = volInfo['authors'][0]
+            except:
+                book['author'] = None
+            try:
+                book['description'] = volInfo['description']
+            except:
+                book['description'] = None
+            try:
+                book['img'] = volInfo['imageLinks']['thumbnail']
+            except:
+                book['img'] = None
+            books.append(book)
+    except:
+        books = None
+    return render_template('search.html', books=books)
 
 
 @app.route('/recommendations')
