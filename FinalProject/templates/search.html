@@ -6,16 +6,16 @@
 {% block body %}
   {% if books != None %}
     {% for book in books %}
-    <div class="">
-      {% if book['img'] != None %}
-        <img src={{book['img']}} alt=cover />
-      {% endif %}
-      <p>Title: {{book['title']}}</p>
-      <p>Author: {{book['author']}}</p>
-      <p>Description: {{book['description']}}</p>
-      <hr/>
-    </div>
-
+      <div class="">
+        {% if book['img'] != None %}
+          <img src="{{book['img']}}" alt=cover />
+        {% endif %}
+        <p>Title: {{book['title']}}</p>
+        <p>Author: {{book['author']}}</p>
+        <p>Description: {{book['description']}}</p>
+        <button id="{{book['title']}} - {{book['author']}}" onClick="addBook(this.id)">Add to your books</button>
+        <hr/>
+      </div>
     {% endfor %}
   {% else %}
     <p>There are no results to display.</p>

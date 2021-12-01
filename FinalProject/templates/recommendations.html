@@ -4,14 +4,18 @@
 {% endblock %}
 
 {% block body %}
-  {% for g, gRecs in recs.items() %}
-    <div class="col-sm-4 inline">
-      <p>{{g}}</p>
-      <ul>
-        {% for r in gRecs %}
-          <li>{{r}}</li>
-        {% endfor %}
-      </ul>
+  {% for row in rows %}
+    <div class="row row-cols-3 justify-items-center">
+      {% for item in row %}
+        <div class="col-4 gx-0 gy-5 ms-5 me-5 card align-self-start" style="max-width: 24rem;">
+          <h5 class="card-header display-6">{{item[0]}}</h5>
+          <ul class="list-group list-group-flush">
+            {% for r in item[1] %}
+              <li class="list-group-item">{{r}}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
     </div>
   {% endfor %}
 {% endblock %}
