@@ -122,6 +122,16 @@ def search():
     return render_template('search.html', books=books)
 
 
+@app.route('/addBook', methods=['POST'])
+def addBook():
+    cur = mysql.connection.cursor()
+    q = "SELECT id FROM riatalwar_users WHERE username = %s"
+    qVars = (session['riatalwar_username'],)
+    id = execute_query(cur, q, qVars)[0]['id']
+    q = "INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)"
+    qVars = ()
+
+
 @app.route('/recommendations')
 def recommendations():
     ''' Description: Launch the recommendations page and get recommendations from database
@@ -132,7 +142,8 @@ def recommendations():
     q = "SELECT id, genre FROM `riatalwar_genres`"
     genres = execute_query(cur, q)
 
-    r = {}  # Create dictionary to store recs for each genre
+    r = []  # Create dictionary to store recs for each genre
+    i = 0
     for pair in genres:
         id = pair['id']
         # Get all recs for a certain genre
@@ -143,10 +154,13 @@ def recommendations():
         # Make an alphabetical list of recommendations
         recsList = [(rec['title'] + " by " + rec['author']) for rec in recsDict]
         recsList.sort()
-        # Store recs for genre in dict
-        r[pair['genre']] = recsList
+        # Store recs and genre
+        if i % 3 == 0:
+            r.append([])
+        r[-1].append((pair['genre'], recsList))
+        i += 1
 
-    return render_template('recommendations.html', recs=r)
+    return render_template('recommendations.html', rows=r)
 
 
 @app.route('/profile')
@@ -164,7 +178,17 @@ def yourbooks():
     ''' Description: Launch the yourbooks page to display user's books
         Parameters: None
         Return: Yourbooks page '''
-    return render_template('yourbooks.html')
+    cur = mysql.connection.cursor()
+    q = "SELECT id FROM riatalwar_users WHERE username = %s"
+    qVars = (session['riatalwar_username'],)
+    id = execute_query(cur, q, qVars)[0]['id']
+    q = "SELECT title, author FROM riatalwar_user_books WHERE user_id = %s"
+    qVars = (id,)
+    results = execute_query(cur, q, qVars)
+    books = []
+    for result in results:
+        books.append((result['title'], result['author']))
+    return render_template('yourbooks.html', books=books)
 
 
 def execute_query(cursor, query, queryVars=()):
