@@ -124,12 +124,19 @@ def search():
 
 @app.route('/addBook', methods=['POST'])
 def addBook():
+    book = request.form.get('book')
     cur = mysql.connection.cursor()
     q = "SELECT id FROM riatalwar_users WHERE username = %s"
-    qVars = (session['riatalwar_username'],)
-    id = execute_query(cur, q, qVars)[0]['id']
+    qVars = (session.get('riatalwar_username'),)
+    try:
+        id = execute_query(cur, q, qVars)[0]['id']
+    except:
+        return "error"
     q = "INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)"
-    qVars = ()
+    title, author = book.split(" - ")
+    qVars = (title, author, id)
+    execute_query(cur, q, qVars)
+    return "success"
 
 
 @app.route('/recommendations')
