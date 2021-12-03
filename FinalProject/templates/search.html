@@ -13,7 +13,7 @@
         <p>Title: {{book['title']}}</p>
         <p>Author: {{book['author']}}</p>
         <p>Description: {{book['description']}}</p>
-        <button id="{{book['title']}} - {{book['author']}}" onClick="addBook(this.id)">Add to your books</button>
+        <button id="{{book['title']}} - {{book['author']}}" class="btn btn-outline-dark" onclick="addBook(this.id)">Add to your books</button>
         <hr/>
       </div>
     {% endfor %}
