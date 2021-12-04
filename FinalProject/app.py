@@ -116,6 +116,7 @@ def search():
                 book['img'] = volInfo['imageLinks']['thumbnail']
             except:
                 book['img'] = None
+            book['id'] = book['title'].replace(" ", "--") + "&&" + book['author'].replace(" ", "--")
             books.append(book)
     except:
         books = None
@@ -133,7 +134,9 @@ def addBook():
     except:
         return "error"
     q = "INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)"
-    title, author = book.split(" - ")
+    title, author = book.split("&&")
+    title = title.replace("--", " ")
+    author = author.replace("--", " ")
     qVars = (title, author, id)
     execute_query(cur, q, qVars)
     return "success"
