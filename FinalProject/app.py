@@ -17,7 +17,7 @@ def index():
     ''' Description: Launch the home page
         Parameters: None
         Return: Home page '''
-    return render_template('index.html', username=session.get('riatalwar_username'))
+    return render_template('index.html', error=request.args.get('error'))
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -32,7 +32,7 @@ def signup():
     cur = mysql.connection.cursor()
 
     # Check if username already in database --> error
-    q = "SELECT * FROM riatalwar_users WHERE username = %s"
+    q = 'SELECT * FROM riatalwar_users WHERE username = %s'
     qVars = (username,)
     if len(execute_query(cur, q, qVars)) > 0:
         return redirect(url_for('signup', error=True))
@@ -94,7 +94,7 @@ def search():
         Return: Search results page '''
     # get search results from API
     q = request.form.get('query')
-    req = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + q + "&printType=books&orderBy=relevance"
+    req = 'https://www.googleapis.com/books/v1/volumes?q=intitle:' + q + '&printType=books&orderBy=relevance'
     response = requests.get(req)
     jsonResp = response.json()
     books = []
@@ -116,7 +116,7 @@ def search():
                 book['img'] = volInfo['imageLinks']['thumbnail']
             except:
                 book['img'] = None
-            book['id'] = book['title'].replace(" ", "--") + "&&" + book['author'].replace(" ", "--")
+            book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--')
             books.append(book)
     except:
         books = None
@@ -127,19 +127,19 @@ def search():
 def addBook():
     book = request.form.get('book')
     cur = mysql.connection.cursor()
-    q = "SELECT id FROM riatalwar_users WHERE username = %s"
+    q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session.get('riatalwar_username'),)
     try:
         id = execute_query(cur, q, qVars)[0]['id']
     except:
-        return "error"
-    q = "INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)"
-    title, author = book.split("&&")
-    title = title.replace("--", " ")
-    author = author.replace("--", " ")
+        return 'error'
+    q = 'INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)'
+    title, author = book.split()
+    title = title.replace('--', ' ')
+    author = author.replace('--', ' ')
     qVars = (title, author, id)
     execute_query(cur, q, qVars)
-    return "success"
+    return 'success'
 
 
 @app.route('/recommendations')
@@ -149,20 +149,20 @@ def recommendations():
         Return: Recommendations page '''
     cur = mysql.connection.cursor()
     # Get all genres stored in database
-    q = "SELECT id, genre FROM `riatalwar_genres`"
+    q = 'SELECT id, genre FROM riatalwar_genres'
     genres = execute_query(cur, q)
 
     r = []  # Create dictionary to store recs for each genre
-    i = 0
+    i = 0   # Use to group recs in rows
     for pair in genres:
         id = pair['id']
         # Get all recs for a certain genre
-        q = "SELECT author, title FROM `riatalwar_recommendatons` WHERE genre_id=%s"
+        q = 'SELECT author, title FROM riatalwar_recommendatons WHERE genre_id=%s'
         qVars = (id,)
         recsDict = execute_query(cur, q, qVars)
 
         # Make an alphabetical list of recommendations
-        recsList = [(rec['title'] + " by " + rec['author']) for rec in recsDict]
+        recsList = [(rec['title'] + ' by ' + rec['author']) for rec in recsDict]
         recsList.sort()
         # Store recs and genre
         if i % 3 == 0:
@@ -179,7 +179,7 @@ def profile():
         Parameters: None
         Return: Profile page '''
     if session.get('riatalwar_username') == None:
-        return redirect(url_for('signup'))
+        return redirect(url_for('login'))
     return render_template('profile.html')
 
 
@@ -188,11 +188,14 @@ def yourbooks():
     ''' Description: Launch the yourbooks page to display user's books
         Parameters: None
         Return: Yourbooks page '''
+    username = session.get('riatalwar_username')
+    if username == None:
+        return redirect(url_for('login'))
     cur = mysql.connection.cursor()
-    q = "SELECT id FROM riatalwar_users WHERE username = %s"
+    q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session['riatalwar_username'],)
     id = execute_query(cur, q, qVars)[0]['id']
-    q = "SELECT title, author FROM riatalwar_user_books WHERE user_id = %s"
+    q = 'SELECT title, author FROM riatalwar_user_books WHERE user_id = %s'
     qVars = (id,)
     results = execute_query(cur, q, qVars)
     books = []
