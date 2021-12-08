@@ -17,7 +17,7 @@ def index():
     ''' Description: Launch the home page
         Parameters: None
         Return: Home page '''
-    return render_template('index.html', error=request.args.get('error'))
+    return render_template('index.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
