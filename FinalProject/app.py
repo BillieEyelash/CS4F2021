@@ -129,10 +129,9 @@ def addBook():
     cur = mysql.connection.cursor()
     q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session.get('riatalwar_username'),)
-    try:
-        id = execute_query(cur, q, qVars)[0]['id']
-    except:
+    if qVars[0] == None:
         return 'error'
+    id = execute_query(cur, q, qVars)[0]['id']
     q = 'INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)'
     title, author = book.split()
     title = title.replace('--', ' ')
@@ -180,7 +179,7 @@ def profile():
         Return: Profile page '''
     if session.get('riatalwar_username') == None:
         return redirect(url_for('login'))
-    return render_template('profile.html')
+    return render_template('profile.html', username=session.get('riatalwar_username'))
 
 
 @app.route('/yourbooks')
