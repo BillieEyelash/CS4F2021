@@ -13,3 +13,8 @@ body
 {
   color: #212121;
 }
+
+.rounded
+{
+  border-radius: 50px;
+}
