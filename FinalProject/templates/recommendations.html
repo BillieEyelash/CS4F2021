@@ -4,18 +4,20 @@
 {% endblock %}
 
 {% block body %}
-  {% for row in rows %}
-    <div class="row row-cols-3 justify-items-center">
-      {% for item in row %}
-        <div class="col-4 gx-0 gy-5 ms-5 me-5 card align-self-start" style="max-width: 24rem;">
-          <h5 class="card-header display-6">{{item[0]}}</h5>
-          <ul class="list-group list-group-flush">
-            {% for r in item[1] %}
-              <li class="list-group-item">{{r}}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endfor %}
+<div class="row g-0 justify-content-around">
+  {% for item in items %}
+    <div class="col-4 card mb-5" style="max-width: 29rem;">
+      <h5 class="card-header display-6">{{item[0]}}</h5>
+      <ul class="card-body list-group list-group-flush">
+        {% for r in item[1] %}
+          <li class="list-group-item d-flex align-items-start">
+            {{r[0]}}
+            <button id="{{r[1]}}" class="btn btn-dark ms-auto" onclick="addBook(this.id)">Save book</button>
+          </li>
+        {% endfor %}
+      </ul>
     </div>
   {% endfor %}
+</div>
+
 {% endblock %}
