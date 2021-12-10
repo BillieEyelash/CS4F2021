@@ -9,9 +9,9 @@ function addBook(id)
         alert.role = 'alert';
         alert.classList.add('alert');
         alert.classList.add('alert-danger');
-        let card = document.querySelector('.card');
         let parent = document.getElementById('body');
-        parent.insertBefore(alert, card);
+        let after = parent.children[0];
+        parent.insertBefore(alert, after);
       } else {
         let button = document.getElementById(id);
         button.innerHTML = 'Added to your books';
