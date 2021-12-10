@@ -127,12 +127,14 @@ def search():
 def addBook():
     book = request.form.get('book')
     cur = mysql.connection.cursor()
+    # Get username
     q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session.get('riatalwar_username'),)
     if qVars[0] == None:
         return 'error'
     id = execute_query(cur, q, qVars)[0]['id']
     q = 'INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)'
+    # Create id
     title, author = book.split()
     title = title.replace('--', ' ')
     author = author.replace('--', ' ')
@@ -151,8 +153,7 @@ def recommendations():
     q = 'SELECT id, genre FROM riatalwar_genres'
     genres = execute_query(cur, q)
 
-    r = []  # Create dictionary to store recs for each genre
-    i = 0   # Use to group recs in rows
+    recs = []  # Create dictionary to store recs for each genre
     for pair in genres:
         id = pair['id']
         # Get all recs for a certain genre
@@ -160,16 +161,14 @@ def recommendations():
         qVars = (id,)
         recsDict = execute_query(cur, q, qVars)
 
-        # Make an alphabetical list of recommendations
-        recsList = [(rec['title'] + ' by ' + rec['author']) for rec in recsDict]
-        recsList.sort()
-        # Store recs and genre
-        if i % 3 == 0:
-            r.append([])
-        r[-1].append((pair['genre'], recsList))
-        i += 1
-
-    return render_template('recommendations.html', rows=r)
+        # Make a list of recommendations
+        recsList = []
+        for rec in recsDict:
+            display = rec['title'] + ' by ' + rec['author']
+            id = rec['title'].replace(' ', '--') + '++' + rec['author'].replace(' ', '--')
+            recsList.append((display, id))
+        recs.append((pair['genre'], recsList))
+    return render_template('recommendations.html', items=recs)
 
 
 @app.route('/profile')
@@ -191,9 +190,11 @@ def yourbooks():
     if username == None:
         return redirect(url_for('login'))
     cur = mysql.connection.cursor()
+    # Get user id so you can find their books
     q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session['riatalwar_username'],)
     id = execute_query(cur, q, qVars)[0]['id']
+    # Get books
     q = 'SELECT title, author FROM riatalwar_user_books WHERE user_id = %s'
     qVars = (id,)
     results = execute_query(cur, q, qVars)
