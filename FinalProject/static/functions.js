@@ -14,7 +14,7 @@ function addBook(id)
         parent.insertBefore(alert, after);
       } else {
         let button = document.getElementById(id);
-        button.innerHTML = 'Added to your books';
+        button.innerHTML = 'saved';
       }
 		}
   };

@@ -10,9 +10,9 @@
       <h5 class="card-header display-6">{{item[0]}}</h5>
       <ul class="card-body list-group list-group-flush">
         {% for r in item[1] %}
-          <li class="list-group-item d-flex align-items-start">
+          <li class="list-group-item d-flex">
             {{r[0]}}
-            <button id="{{r[1]}}" class="btn btn-dark ms-auto" onclick="addBook(this.id)">Save book</button>
+            <button id="{{r[1]}}" class="btn btn-dark ms-auto" onclick="addBook(this.id)">save book</button>
           </li>
         {% endfor %}
       </ul>
