@@ -31,7 +31,7 @@ function addBook(id)
   };
   xhttp.open('POST', '/addBook', true);
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhttp.send('book=' + id);
+  xhttp.send('book=' + id.replace('&', 'and'));
 }
 
 
