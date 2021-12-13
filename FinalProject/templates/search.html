@@ -16,9 +16,13 @@
           <div class="col-md-10">
             <div class="card-body">
               <h5 class="card-title">{{book['title']}} by {{book['author']}}</h5>
-              <p class="card-text">{{book['description']}}</p>
+              {% if book['description'] != None %}
+                <p class="card-text" hidden>{{book['description']}}</p>
+                <button class="show-description btn btn-outline-dark mb-3">show description</button>
+                <br/>
+              {% endif %}
+              <button id="{{book['id']}}" class="btn btn-outline-dark" onclick="addBook(this.id)">save book</button>
             </div>
-            <button id="{{book['id']}}" class="btn btn-outline-dark" onclick="addBook(this.id)">save book</button>
           </div>
         </div>
       </div>

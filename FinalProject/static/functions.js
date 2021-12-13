@@ -12,12 +12,12 @@ function addBook(id)
         alert.classList.add('alert');
         alert.classList.add('alert-danger');
         // Link to login
-        let link = document.createElement('a')
-        link.href = 'login'
-        link.innerHTML = 'Sign in here!'
-        link.classList.add('alert-link')
+        let link = document.createElement('a');
+        link.href = 'login';
+        link.innerHTML = 'Sign in here!';
+        link.classList.add('alert-link');
         // Add link to error
-        alert.appendChild(link)
+        alert.appendChild(link);
         // Add error to the top of the page
         let parent = document.getElementById('body');
         let after = parent.children[0];
@@ -33,3 +33,22 @@ function addBook(id)
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send('book=' + id);
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Get all the buttons and description text
+  let showBtns = document.querySelectorAll(".show-description");
+  let descriptions = document.querySelectorAll(".card-text");
+  // For each button make it toggle hidden attribute for description
+  for (let i = 0; i < showBtns.length; i++) {
+    showBtns[i].addEventListener("click", function() {
+      if (descriptions[i].hidden) {
+        descriptions[i].hidden = false;
+        showBtns[i].innerHTML = "hide description";
+      } else {
+        descriptions[i].hidden = true;
+        showBtns[i].innerHTML = "show description";
+      }
+    });
+  }
+});
