@@ -35,19 +35,34 @@ function addBook(id)
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+function removeBook(id)
+{
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let parent = document.getElementById(id).parentElement;
+      parent.hidden = true;
+		}
+  };
+  xhttp.open('POST', '/removeBook', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('book=' + id.replace('&', 'and'));
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
   // Get all the buttons and description text
-  let showBtns = document.querySelectorAll(".show-description");
-  let descriptions = document.querySelectorAll(".card-text");
+  let showBtns = document.querySelectorAll('.show-description');
+  let descriptions = document.querySelectorAll('.card-text');
   // For each button make it toggle hidden attribute for description
   for (let i = 0; i < showBtns.length; i++) {
-    showBtns[i].addEventListener("click", function() {
+    showBtns[i].addEventListener('click', function() {
       if (descriptions[i].hidden) {
         descriptions[i].hidden = false;
-        showBtns[i].innerHTML = "hide description";
+        showBtns[i].innerHTML = 'hide description';
       } else {
         descriptions[i].hidden = true;
-        showBtns[i].innerHTML = "show description";
+        showBtns[i].innerHTML = 'show description';
       }
     });
   }
