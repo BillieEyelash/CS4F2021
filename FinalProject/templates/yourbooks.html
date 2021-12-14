@@ -4,9 +4,12 @@
 {% endblock %}
 
 {% block body %}
-  <ul>
+  <ul class="list-group list-group-flush">
     {% for book in books %}
-      <li>{{book[0]}} by {{book[1]}}</li>
+      <li class="list-group-item d-flex align-items-center">
+        {{book[0]}} by {{book[1]}}
+        <button id="{{book[2]}}" class="btn btn-dark remove ms-auto" onclick="removeBook(this.id)">remove</button>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}
