@@ -124,19 +124,47 @@ def search():
 
 @app.route('/addBook', methods=['POST'])
 def addBook():
+    # Get title and author
     book = request.form.get('book')
+    title, author = book.split()
+    title = title.replace('--', ' ')
+    author = author.replace('--', ' ')
+
     cur = mysql.connection.cursor()
-    # Get username
+    # Get current user id
     q = 'SELECT id FROM riatalwar_users WHERE username = %s'
     qVars = (session.get('riatalwar_username'),)
     if qVars[0] == None:
         return 'error'
     id = execute_query(cur, q, qVars)[0]['id']
-    q = 'INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)'
-    # Create id
+    
+    # Check if book was already saved by user
+    q = 'SELECT id FROM riatalwar_user_books WHERE title = %s AND author = %s AND user_id = %s'
+    qVars = (title, author, id)
+    books = execute_query(cur, q, qVars)
+    # If not saved, add book
+    if len(books) == 0:
+        q = 'INSERT INTO riatalwar_user_books (title, author, user_id) VALUES (%s, %s, %s)'
+        qVars = (title, author, id)
+        execute_query(cur, q, qVars)
+    return 'success'
+
+
+@app.route('/removeBook', methods=['POST'])
+def removeBook():
+    # Get title and author
+    book = request.form.get('book')
     title, author = book.split()
     title = title.replace('--', ' ')
     author = author.replace('--', ' ')
+
+    cur = mysql.connection.cursor()
+    # Get current user id
+    q = 'SELECT id FROM riatalwar_users WHERE username = %s'
+    qVars = (session.get('riatalwar_username'),)
+    id = execute_query(cur, q, qVars)[0]['id']
+    # Remove book from database
+    q = 'DELETE FROM riatalwar_user_books WHERE title = %s AND author = %s AND user_id = %s'
     qVars = (title, author, id)
     execute_query(cur, q, qVars)
     return 'success'
@@ -199,7 +227,8 @@ def yourbooks():
     results = execute_query(cur, q, qVars)
     books = []
     for result in results:
-        books.append((result['title'], result['author']))
+        id = result['title'].replace(' ', '--') + '++' + result['author'].replace(' ', '--')
+        books.append((result['title'], result['author'], id))
     return render_template('yourbooks.html', books=books)
 
 
