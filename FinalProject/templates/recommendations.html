@@ -6,11 +6,11 @@
 {% block body %}
 <div class="row g-0 justify-content-around">
   {% for item in items %}
-    <div class="col-4 card mb-5" style="max-width: 29rem;">
+    <div class="col-4 card mb-5 ms-2 me-2" style="max-width: 29rem;">
       <h5 class="card-header display-6">{{item[0]}}</h5>
       <ul class="card-body list-group list-group-flush">
         {% for r in item[1] %}
-          <li class="list-group-item d-flex">
+          <li class="list-group-item d-flex align-items-center">
             {{r[0]}}
             <button id="{{r[1]}}" class="btn btn-dark ms-auto" onclick="addBook(this.id)">save book</button>
           </li>
