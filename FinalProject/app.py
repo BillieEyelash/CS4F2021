@@ -103,8 +103,8 @@ def search():
         return render_template('search.html', books=None)
     books = []
     items = jsonResp['items']
-    for item in items:
-        volInfo = item['volumeInfo']
+    for i in range(len(items)):
+        volInfo = items[i]['volumeInfo']
         book = {}
         book['title'] = volInfo['title']
         # Try to get all information but it is not always there
@@ -120,7 +120,7 @@ def search():
             book['img'] = volInfo['imageLinks']['thumbnail']
         except:
             book['img'] = None
-        book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--')
+        book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--') + str(i)
         book['id'] = book['id'].strip('.')
         # Check if there is a review and store filename
         book['review'] = None
@@ -149,6 +149,7 @@ def addBook():
     title, author = book.split()
     title = title.replace('--', ' ')
     author = author.replace('--', ' ')
+    author = author[:-1]
 
     cur = mysql.connection.cursor()
     # Get current user id
@@ -201,6 +202,7 @@ def recommendations():
     genres = execute_query(cur, q)
 
     recs = []  # Create dictionary to store recs for each genre
+    i = 0
     for pair in genres:
         id = pair['id']
         # Get all recs for a certain genre
@@ -212,8 +214,9 @@ def recommendations():
         recsList = []
         for rec in recsDict:
             display = rec['title'] + ' by ' + rec['author']
-            id = rec['title'].replace(' ', '--') + '++' + rec['author'].replace(' ', '--')
+            id = rec['title'].replace(' ', '--') + '++' + rec['author'].replace(' ', '--') + str(i)
             recsList.append((display, id))
+            i += 1
         recs.append((pair['genre'], recsList))
     return render_template('recommendations.html', items=recs)
 
