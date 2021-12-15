@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block head %}
+  <title>Review - {{title}}</title>
+{% endblock %}
+
+{% block body %}
+  <div class="m-auto" style="max-width: 600px">
+    <h1 class="display-6">{{title}} by {{author}}</h1>
+    {% for line in review %}
+      <p>{{line}}</p>
+    {% endfor %}
+  </div>
+{% endblock %}

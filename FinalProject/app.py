@@ -136,6 +136,8 @@ def review():
     # Get review
     f = open('reviews/' + file)
     lines = [line.strip() for line in f.readlines()]
+    lines[0] = lines[0].strip('ï»¿')
+    print(lines)
     t, a = file.replace('--', ' ').strip('.txt').split('++')
     return render_template('review.html', review=lines, title=t, author=a)
 
