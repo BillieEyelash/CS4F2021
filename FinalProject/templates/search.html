@@ -21,7 +21,13 @@
                 <button class="show-description btn btn-outline-dark mb-3">show description</button>
                 <br/>
               {% endif %}
-              <button id="{{book['id']}}" class="btn btn-outline-dark" onclick="addBook(this.id)">save book</button>
+              <button id="{{book['id']}}" class="btn btn-outline-dark mb-3" onclick="addBook(this.id)">save book</button>
+              {% if book['review'] != None %}
+              <form action="review" method="GET">
+                <input value="{{book['review']}}" name="file" hidden />
+                <input type="submit" class="btn btn-outline-dark" href="review" value="see review"/>
+              </form>
+              {% endif %}
             </div>
           </div>
         </div>
