@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
+from os import listdir
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'mysql.2122.lakeside-cs.org'
@@ -97,6 +98,7 @@ def search():
     req = 'https://www.googleapis.com/books/v1/volumes?q=intitle:' + q + '&printType=books&orderBy=relevance'
     response = requests.get(req)
     jsonResp = response.json()
+    # No results so skip loop
     if jsonResp['totalItems'] == 0:
         return render_template('search.html', books=None)
     books = []
@@ -105,6 +107,7 @@ def search():
         volInfo = item['volumeInfo']
         book = {}
         book['title'] = volInfo['title']
+        # Try to get all information but it is not always there
         try:
             book['author'] = volInfo['authors'][0]
         except:
@@ -118,8 +121,23 @@ def search():
         except:
             book['img'] = None
         book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--')
+        # Check if there is a review and store filename
+        book['review'] = None
+        dir = listdir('reviews')
+        if book['id'] + '.txt' in dir:
+            book['review'] = book['id'] + '.txt'
         books.append(book)
     return render_template('search.html', books=books)
+
+
+@app.route('/review', methods=['GET'])
+def review():
+    file = request.args.get('file')
+    # Get review
+    f = open('reviews/' + file)
+    lines = [line.strip() for line in f.readlines()]
+    t, a = file.replace('--', ' ').strip('.txt').split('++')
+    return render_template('review.html', review=lines, title=t, author=a)
 
 
 @app.route('/addBook', methods=['POST'])
@@ -137,7 +155,7 @@ def addBook():
     if qVars[0] == None:
         return 'error'
     id = execute_query(cur, q, qVars)[0]['id']
-    
+
     # Check if book was already saved by user
     q = 'SELECT id FROM riatalwar_user_books WHERE title = %s AND author = %s AND user_id = %s'
     qVars = (title, author, id)
