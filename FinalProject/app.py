@@ -121,6 +121,7 @@ def search():
         except:
             book['img'] = None
         book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--')
+        book['id'] = book['id'].strip('.')
         # Check if there is a review and store filename
         book['review'] = None
         dir = listdir('reviews')
@@ -137,7 +138,6 @@ def review():
     f = open('reviews/' + file)
     lines = [line.strip() for line in f.readlines()]
     lines[0] = lines[0].strip('ï»¿')
-    print(lines)
     t, a = file.replace('--', ' ').strip('.txt').split('++')
     return render_template('review.html', review=lines, title=t, author=a)
 
