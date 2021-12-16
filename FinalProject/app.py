@@ -124,9 +124,10 @@ def search():
         book['id'] = book['id'].strip('.')
         # Check if there is a review and store filename
         book['review'] = None
-        dir = listdir('reviews')
-        if book['id'] + '.txt' in dir:
-            book['review'] = book['id'] + '.txt'
+
+        dir = listdir('public/RiaTalwar/TestingDay/reviews')
+        if book['id'][:-1] + '.txt' in dir:
+            book['review'] = book['id'][:-1] + '.txt'
         books.append(book)
     return render_template('search.html', books=books)
 
@@ -135,7 +136,7 @@ def search():
 def review():
     file = request.args.get('file')
     # Get review
-    f = open('reviews/' + file)
+    f = open('public/RiaTalwar/TestingDay/reviews/' + file)
     lines = [line.strip() for line in f.readlines()]
     lines[0] = lines[0].strip('ï»¿')
     t, a = file.replace('--', ' ').strip('.txt').split('++')
