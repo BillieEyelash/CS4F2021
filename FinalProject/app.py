@@ -92,6 +92,19 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/delete', methods=['GET', 'POST'])
+def delete():
+    ''' Description: Delete account and redirect to home page
+        Parameters: None
+        Return: Home page '''
+    username = session.pop('riatalwar_username', None)
+    cur = mysql.connection.cursor()
+    q = 'DELETE FROM riatalwar_users WHERE username = %s'
+    qVars = (username,)
+    execute_query(cur, q, qVars)
+    return redirect(url_for('index'))
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     ''' Description: Launch the results page and retrieve input from form
@@ -233,7 +246,7 @@ def profile():
         Return: Profile page '''
     if session.get('riatalwar_username') == None:
         return redirect(url_for('login'))
-    return render_template('profile.html', username=session.get('riatalwar_username'))
+    return render_template('profile.html', username=session.get('riatalwar_username'), error=request.args.get('error'))
 
 
 @app.route('/yourbooks')

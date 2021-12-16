@@ -4,8 +4,28 @@
 {% endblock %}
 
 {% block body %}
-  <p>Username: {{username}}</p>
-  <form action="logout" method='POST'>
-    <input class="btn btn-dark" type="submit" value="logout">
-  </form>
+  <div class="col-6 align-center border bg-light p-5 rounded m-auto">
+    <p>Username: {{username}}</p>
+    <form method="POST" action="changepass">
+      <div class="input-group mb-3">
+        <span class="input-group-text">old password</span>
+        <input class="form-control" type="text" name="oldpass" required />
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">new password</span>
+        <input class="form-control" type="password" name="newpass" required />
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">confirm password</span>
+        <input class="form-control" type="password" name="confirm" required />
+      </div>
+      <input class="btn btn-dark mb-3" type="submit" value="change password" />
+    </form>
+    <form action="logout" method='POST'>
+      <input class="btn btn-dark mb-3" type="submit" value="logout">
+    </form>
+    <form action="delete" method='POST'>
+      <input class="btn btn-dark mb-3" type="submit" value="delete account">
+    </form>
+  </div>
 {% endblock %}
