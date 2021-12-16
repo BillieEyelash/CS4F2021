@@ -30,6 +30,7 @@ def signup():
         return render_template('signup.html', error=request.args.get('error'))
     username = request.form.get('username')
     password = request.form.get('password')
+    confirm = request.form.get('confirm')
     cur = mysql.connection.cursor()
 
     # Check if username already in database --> error
@@ -42,6 +43,9 @@ def signup():
         return redirect(url_for('signup', error=True))
     # Check if password is too short --> error
     elif len(password) == 0:
+        return redirect(url_for('signup', error=True))
+    # Check if passwords don't match --> error
+    elif password != confirm:
         return redirect(url_for('signup', error=True))
 
     # Insert username/password into database --> login
