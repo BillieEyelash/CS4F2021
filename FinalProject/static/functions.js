@@ -29,7 +29,7 @@ function addBook(id)
       }
 		}
   };
-  xhttp.open('POST', '/addBook', true);
+  xhttp.open('POST', 'addBook', true);
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send('book=' + id.replace('&', 'and'));
 }
@@ -40,11 +40,14 @@ function removeBook(id)
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      let parent = document.getElementById(id).parentElement;
-      parent.hidden = true;
+      let button = document.getElementById(id);
+      let parent = button.parentElement;
+      let name = parent.children[0];
+      button.hidden = true;
+      name.hidden = true;
 		}
   };
-  xhttp.open('POST', '/removeBook', true);
+  xhttp.open('POST', 'removeBook', true);
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   xhttp.send('book=' + id.replace('&', 'and'));
 }
