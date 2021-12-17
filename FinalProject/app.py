@@ -175,8 +175,8 @@ def search():
         # Check if there is a review and store filename
         book['review'] = None
         dir = listdir('public/RiaTalwar/FinalProject/reviews')
-        if book['id'][:-1] + '.txt' in dir:
-            book['review'] = book['id'][:-1] + '.txt'
+        if book['id'][:-len(str(i))] + '.txt' in dir:
+            book['review'] = book['id'][:-len(str(i))] + '.txt'
         books.append(book)
     return render_template('search.html', books=books)
 
@@ -206,7 +206,8 @@ def addBook():
     title, author = book.split()
     title = title.replace('--', ' ')
     author = author.replace('--', ' ')
-    author = author[:-1]
+    while author[-1].isnumeric():
+        author = author[:-1]
 
     cur = mysql.connection.cursor()
     # Get current user id
