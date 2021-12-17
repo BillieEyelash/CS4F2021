@@ -23,28 +23,29 @@ def index():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    ''' Description: Launch the login page
+    ''' Description: Launch signup page and add users
         Parameters: None
         Return: Signup page '''
     if request.method == 'GET':
         return render_template('signup.html', error=request.args.get('error'))
+
     username = request.form.get('username')
     password = request.form.get('password')
     confirm = request.form.get('confirm')
-    cur = mysql.connection.cursor()
 
-    # Check if username already in database --> error
+    cur = mysql.connection.cursor()
+    # If username already in database --> error
     q = 'SELECT * FROM riatalwar_users WHERE username = %s'
     qVars = (username,)
     if len(execute_query(cur, q, qVars)) > 0:
         return redirect(url_for('signup', error=True))
-    # Check if username is too long/short --> error
+    # If username is too long/short --> error
     elif len(username) > 50 or len(username) == 0:
         return redirect(url_for('signup', error=True))
-    # Check if password is too short --> error
+    # If password is too short --> error
     elif len(password) == 0:
         return redirect(url_for('signup', error=True))
-    # Check if passwords don't match --> error
+    # If passwords don't match --> error
     elif password != confirm:
         return redirect(url_for('signup', error=True))
 
@@ -58,7 +59,7 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    ''' Description: Launch the login page
+    ''' Description: Launch login page and log in users
         Parameters: None
         Return: Login page '''
     if request.method == 'GET':
@@ -106,12 +107,14 @@ def changepass():
     q = 'SELECT password FROM riatalwar_users WHERE username = %s'
     qVars = (username,)
     password = execute_query(cur, q, qVars)[0]['password']
+
     # If old passwords don't match
     if not check_password_hash(password, oldpass):
         return redirect(url_for('profile', error=True))
     # If new passwords don't match
     elif newpass != confirm:
         return redirect(url_for('profile', error=True))
+
     # Update database if no errors
     q = 'UPDATE riatalwar_users SET password = %s WHERE username = %s'
     qVars = (generate_password_hash(newpass), username)
@@ -134,7 +137,7 @@ def delete():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    ''' Description: Launch the results page and retrieve input from form
+    ''' Description: Get API data and display results
         Parameters: None
         Return: Search results page '''
     # get search results from API
@@ -145,6 +148,7 @@ def search():
     # No results so skip loop
     if jsonResp['totalItems'] == 0:
         return render_template('search.html', books=None)
+
     books = []
     items = jsonResp['items']
     for i in range(len(items)):
@@ -164,11 +168,12 @@ def search():
             book['img'] = volInfo['imageLinks']['thumbnail']
         except:
             book['img'] = None
+        # Create unique id
         book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--') + str(i)
         book['id'] = book['id'].strip('.')
+
         # Check if there is a review and store filename
         book['review'] = None
-
         dir = listdir('public/RiaTalwar/TestingDay/reviews')
         if book['id'][:-1] + '.txt' in dir:
             book['review'] = book['id'][:-1] + '.txt'
@@ -178,17 +183,24 @@ def search():
 
 @app.route('/review', methods=['GET'])
 def review():
+    ''' Description: Display review
+        Parameters: None
+        Return: Review page '''
     file = request.args.get('file')
     # Get review
     f = open('public/RiaTalwar/TestingDay/reviews/' + file)
     lines = [line.strip() for line in f.readlines()]
     lines[0] = lines[0].strip('ï»¿')
+    # Get title and author
     t, a = file.replace('--', ' ').strip('.txt').split('++')
     return render_template('review.html', review=lines, title=t, author=a)
 
 
 @app.route('/addBook', methods=['POST'])
 def addBook():
+    ''' Description: Add a book to user's books
+        Parameters: None
+        Return: success/error '''
     # Get title and author
     book = request.form.get('book')
     title, author = book.split()
@@ -218,6 +230,9 @@ def addBook():
 
 @app.route('/removeBook', methods=['POST'])
 def removeBook():
+    ''' Description: Remove book from user's account
+        Parameters: None
+        Return: success '''
     # Get title and author
     book = request.form.get('book')
     title, author = book.split()
@@ -238,7 +253,7 @@ def removeBook():
 
 @app.route('/recommendations')
 def recommendations():
-    ''' Description: Launch the recommendations page and get recommendations from database
+    ''' Description: Get and display recommendations from database
         Parameters: None
         Return: Recommendations page '''
     cur = mysql.connection.cursor()
@@ -259,6 +274,7 @@ def recommendations():
         recsList = []
         for rec in recsDict:
             display = rec['title'] + ' by ' + rec['author']
+            # Create unique id
             id = rec['title'].replace(' ', '--') + '++' + rec['author'].replace(' ', '--') + str(i)
             recsList.append((display, id))
             i += 1
