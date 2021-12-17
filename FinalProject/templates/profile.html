@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block body %}
-  {% if error %}
-    <div class="alert alert-danger" role="alert">
-      Incorrect password.
-    </div>
-  {% endif %}
   <div class="col-6 align-center border bg-light p-5 rounded m-auto">
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        Incorrect password.
+      </div>
+    {% endif %}
     <p>Username: {{username}}</p>
     <form method="POST" action="changepass">
       <div class="input-group mb-3">
@@ -26,6 +26,7 @@
       </div>
       <input class="btn btn-dark mb-3" type="submit" value="change password" />
     </form>
+    <hr/>
     <form action="logout" method='POST'>
       <input class="btn btn-dark mb-3" type="submit" value="logout">
     </form>

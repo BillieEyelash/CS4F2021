@@ -92,6 +92,33 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/changepass', methods=['GET', 'POST'])
+def changepass():
+    ''' Description: Change password
+        Parameters: None
+        Return: Profile page '''
+    oldpass = request.form.get('oldpass')
+    newpass = request.form.get('newpass')
+    confirm = request.form.get('confirm')
+    # Search database for username/password
+    username = session.get('riatalwar_username', None)
+    cur = mysql.connection.cursor()
+    q = 'SELECT password FROM riatalwar_users WHERE username = %s'
+    qVars = (username,)
+    password = execute_query(cur, q, qVars)[0]['password']
+    # If old passwords don't match
+    if not check_password_hash(password, oldpass):
+        return redirect(url_for('profile', error=True))
+    # If new passwords don't match
+    elif newpass != confirm:
+        return redirect(url_for('profile', error=True))
+    # Update database if no errors
+    q = 'UPDATE riatalwar_users SET password = %s WHERE username = %s'
+    qVars = (generate_password_hash(newpass), username)
+    execute_query(cur, q, qVars)
+    return redirect(url_for('profile', error=False))
+
+
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
     ''' Description: Delete account and redirect to home page
@@ -239,7 +266,7 @@ def recommendations():
     return render_template('recommendations.html', items=recs)
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     ''' Description: Launch the profile page
         Parameters: None
