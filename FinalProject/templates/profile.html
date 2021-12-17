@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block body %}
+  {% if error %}
+    <div class="alert alert-danger" role="alert">
+      Incorrect password.
+    </div>
+  {% endif %}
   <div class="col-6 align-center border bg-light p-5 rounded m-auto">
     <p>Username: {{username}}</p>
     <form method="POST" action="changepass">
