@@ -7,7 +7,7 @@
   <div class="col-6 align-center border bg-light p-5 rounded m-auto">
     {% if error %}
       <div class="alert alert-danger" role="alert">
-        Incorrect password.
+        {{error}}
       </div>
     {% endif %}
     <p>Username: {{username}}</p>

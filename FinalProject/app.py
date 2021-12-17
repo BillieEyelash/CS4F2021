@@ -110,10 +110,13 @@ def changepass():
 
     # If old passwords don't match
     if not check_password_hash(password, oldpass):
-        return redirect(url_for('profile', error=True))
+        return redirect(url_for('profile', error='Incorrect password.'))
     # If new passwords don't match
     elif newpass != confirm:
-        return redirect(url_for('profile', error=True))
+        return redirect(url_for('profile', error='Passwords do not match.'))
+    # If password length == 0
+    elif len(newpass) == 0:
+        return redirect(url_for('profile', error='Invalid password.'))
 
     # Update database if no errors
     q = 'UPDATE riatalwar_users SET password = %s WHERE username = %s'
