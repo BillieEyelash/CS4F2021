@@ -119,7 +119,7 @@ def changepass():
     q = 'UPDATE riatalwar_users SET password = %s WHERE username = %s'
     qVars = (generate_password_hash(newpass), username)
     execute_query(cur, q, qVars)
-    return redirect(url_for('profile', error=False))
+    return redirect(url_for('profile'))
 
 
 @app.route('/delete', methods=['GET', 'POST'])
@@ -174,7 +174,7 @@ def search():
 
         # Check if there is a review and store filename
         book['review'] = None
-        dir = listdir('public/RiaTalwar/TestingDay/reviews')
+        dir = listdir('public/RiaTalwar/FinalProject/reviews')
         if book['id'][:-1] + '.txt' in dir:
             book['review'] = book['id'][:-1] + '.txt'
         books.append(book)
@@ -188,7 +188,7 @@ def review():
         Return: Review page '''
     file = request.args.get('file')
     # Get review
-    f = open('public/RiaTalwar/TestingDay/reviews/' + file)
+    f = open('public/RiaTalwar/FinalProject/reviews/' + file)
     lines = [line.strip() for line in f.readlines()]
     lines[0] = lines[0].strip('ï»¿')
     # Get title and author
