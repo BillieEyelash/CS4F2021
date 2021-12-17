@@ -173,7 +173,7 @@ def search():
             book['img'] = None
         # Create unique id
         book['id'] = book['title'].replace(' ', '--') + '++' + book['author'].replace(' ', '--') + str(i)
-        book['id'] = book['id'].strip('.')
+        book['id'] = book['id'].replace('.', '')
 
         # Check if there is a review and store filename
         book['review'] = None
